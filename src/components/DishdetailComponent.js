@@ -3,7 +3,7 @@ import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbIte
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
 
     if (comments != null) {
         const comment = comments.map((cmt) => {
@@ -23,7 +23,7 @@ function RenderComments({ comments }) {
                 <ul className="list-unstyled">
                     {comment}
                 </ul>
-                <CommentForm />
+                <CommentForm dishId={dishId} addComment={addComment} />
             </div>
         );
     }
@@ -63,7 +63,9 @@ const DishDetail = (props) => {
                 </div>
                 <div className="row">
                     <RenderDish dish={props.dish} />
-                    <RenderComments comments={props.comments} />
+                    <RenderComments comments={props.comments} 
+                        addComment={props.addComment}
+                        dishId={props.dish.id} />
                 </div>
             </div>
         );
@@ -101,8 +103,7 @@ export class CommentForm extends Component {
     handleSubmit(values) {
         this.toggleModal();
 
-        console.log('comment:', values);
-        alert('comment:' + JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
